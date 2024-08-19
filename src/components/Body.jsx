@@ -12,6 +12,23 @@ function Body() {
             Sağlık bölümümüzde, vücut kitle indeksinden metabolizma hızınıza kadar çeşitli hesaplamalarla sağlığınızı takip edebilir, Matematik bölümümüzde ise pratik matematiksel araçlarla problemlerinizi hızlıca çözebilirsiniz. <br /><br />
             Hedefimiz, karmaşık hesaplamaları sizin için basit hale getirmek. Hadi, başlayalım!</p>
         </div>
+
+        <div className='categories'>
+          <li>
+            <a className='title'>Sağlık</a>
+            <div className='nalt'>
+              <a href="https://boy-kilo-endeks.vercel.app">Boy Kilo Endeksi Hesap</a>
+              <a href="https://metabolizma-hesap.vercel.app">Metobalizma Hızı Hesap</a>
+            </div>
+          </li>
+          <li>
+            <a className='title'>Matematik</a>
+            <div className='nalt'>
+              <a>Yakında..</a>
+            </div>
+          </li>
+        </div>
+
         <div className='connect'>
             <h3>İletişim</h3>
             <p>Önerilerinize açığız aşağıdaki linklerden bize ulaşabilirsiniz.</p>

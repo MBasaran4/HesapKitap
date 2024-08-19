@@ -85,7 +85,7 @@ body{
     padding: 10px;
     border-radius: 5px 5px 0px 0px;
 }
-.menu .title:hover{
+li:hover .title{
     background-color: var(--button-color);
 }
 .menu .nalt{
