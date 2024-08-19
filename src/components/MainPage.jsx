@@ -3,6 +3,8 @@ import './MainPage.css';
 import Body from './Body';
 import { FaMoon } from "react-icons/fa6";
 import { MdOutlineWbSunny } from "react-icons/md";
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 function MainPage() {
   // URL'deki tema parametresini al ve localStorage'a kaydet
@@ -36,6 +38,9 @@ function MainPage() {
 
   return (
     <div>
+      <Analytics/>
+      <SpeedInsights/>
+
       <div className='navBar'>
         <a href="https://hesap-kitap.vercel.app"><h1>Hesap<span className='kitap'>Kitap</span></h1></a>
         <div className='menu'>
