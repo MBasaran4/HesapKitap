@@ -130,21 +130,24 @@ button:hover .link{
         border-radius: 5px;
         list-style-type: none;
         cursor: pointer;
-        transition: 0.2s ease-in-out;
+        transition: 0.3s ease-in-out;
         text-decoration: none;
     }
     li:hover{
         background-color: var(--button-color);
     }
+    li .title{
+        border-radius: 5px 5px 0px 0px;
+    }
     .nalt{
         display: none;
         position: absolute;
         flex-direction: column;
-        top: 110%;
+        top: 100%;
         left: 0%;
         background-color: var(--button-color);
         padding: 10px;
-        border-radius: 5px;
+        border-radius: 0px 5px 5px 5px;
     }
     .nalt a{
         color: var(--background-color);
@@ -156,7 +159,6 @@ button:hover .link{
         color: var(--background-color);
         padding-bottom: 5px;
         margin-bottom: 5px;
-        border-radius: 5px 5px 0px 0px;
     }
     li:hover .nalt{
        display: flex;
