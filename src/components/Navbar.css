@@ -198,6 +198,7 @@ li:hover .title {
     background-color: var(--button-color);
     transition: left 0.2s ease-in-out;
     list-style: none;
+    z-index: 1000;
 }
 .mobile-menu .backButton{
     color: black;

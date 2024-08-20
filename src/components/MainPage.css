@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
-body.light.mode{  
+body.light-mode{  
     --background-color:white;
     --text-color: black;
     --border-before-color: rgba(63, 63, 63, 0.39);
