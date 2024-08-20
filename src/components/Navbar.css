@@ -191,9 +191,8 @@ li:hover .title {
     flex-direction: column;
     top: 0;
     left: -350px;
-    width: 50%;
-    min-width: 100px;
-    max-width: 350px;
+    min-width: 50%;
+    max-width: fit-content;
     height: 100%;
     background-color: var(--button-color);
     transition: left 0.2s ease-in-out;
