@@ -1,4 +1,7 @@
 /* Navbar Styles */
+body{
+    height: 100%;
+}
 .navBar {
     margin: 0;
     padding: 0;
@@ -194,11 +197,15 @@ li:hover .title {
     width: fit-content;
     min-width: 50%;
     max-width: 90%;
-    height: 100%;
+    min-height: 100%;
     background-color: var(--button-color);
     transition: left 0.2s ease-in-out;
     list-style: none;
     z-index: 1000;
+}
+.mobile-menu.active {
+    display: none;
+    left: 0;
 }
 .mobile-menu .backButton{
     color: black;
@@ -239,7 +246,6 @@ li:hover .title {
     opacity: 0;
     max-width: 100%;
     min-width: fit-content;
-
 }
 .mNalt.active{
     max-height: 500px;
@@ -262,11 +268,6 @@ li:hover .title {
 }
 .mNalt a:hover{
     color: #3a3a3a;
-}
-
-.mobile-menu.active {
-    display: none;
-    left: 0;
 }
 
 /* Mobile Styles */
