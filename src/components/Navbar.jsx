@@ -22,6 +22,7 @@ function Navbar() {
     const [isNaltOpenSaglik, setIsNaltOpenSaglik] = useState(false);
     const [isNaltOpenMatematik, setIsNaltOpenMatematik] = useState(false);
     const [isNaltOpenZaman, setIsNaltOpenZaman] = useState(false);
+    const [isNaltOpenEgitim, setIsNaltOpenEgitim] = useState(false);
     
     useEffect(() => {
         document.body.classList.toggle('light-mode', isLightMode);
@@ -47,18 +48,28 @@ function Navbar() {
         setIsNaltOpenSaglik(!isNaltOpenSaglik);
         setIsNaltOpenMatematik(false); // Diğer alt menüyü kapatır
         setIsNaltOpenZaman(false); // Diğer alt menüyü kapatır
+        setIsNaltOpenEgitim(false); // Diğer alt menüyü kapatır
     };
 
     const toggleNaltMatematik = () => {
         setIsNaltOpenMatematik(!isNaltOpenMatematik);
         setIsNaltOpenSaglik(false); // Diğer alt menüyü kapatır
         setIsNaltOpenZaman(false); // Diğer alt menüyü kapatır
+        setIsNaltOpenEgitim(false); // Diğer alt menüyü kapatır
     };
 
     const toggleNaltZaman = () => {
         setIsNaltOpenZaman(!isNaltOpenZaman);
         setIsNaltOpenSaglik(false); // Diğer alt menüyü kapatır
         setIsNaltOpenMatematik(false); // Diğer alt menüyü kapatır
+        setIsNaltOpenEgitim(false); // Diğer alt menüyü kapatır
+    };
+
+    const toggleNaltEgitim = () => {
+        setIsNaltOpenEgitim(!isNaltOpenEgitim);
+        setIsNaltOpenSaglik(false); // Diğer alt menüyü kapatır
+        setIsNaltOpenMatematik(false); // Diğer alt menüyü kapatır
+        setIsNaltOpenZaman(false);  // Diğer alt menüyü kapatır
     };
 
     return (
@@ -121,8 +132,8 @@ function Navbar() {
                         </div>
                     </li>
                     <li>
-                        <a className='title'>Eğitim</a>
-                        <div className='nalt'>
+                        <a className='mTitle' onClick={toggleNaltEgitim}>Egitim</a>
+                        <div className={`mNalt ${isNaltOpenEgitim ? 'active' : ''}`}>
                             <a href="">Vize Final Hesaplama</a>
                         </div>
                     </li>
