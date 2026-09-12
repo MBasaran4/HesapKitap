@@ -1,0 +1,49 @@
+.date-picker-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 360px;
+  margin: 8px auto 16px auto;
+}
+
+.date-select-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-select-label {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.date-select-field {
+  background-color: var(--input-hovered-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-before-color);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.date-select-field:focus {
+  border-color: var(--button-color);
+}
+
+.date-section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-top: 15px;
+  margin-bottom: 6px;
+  text-align: center;
+  width: 100%;
+}

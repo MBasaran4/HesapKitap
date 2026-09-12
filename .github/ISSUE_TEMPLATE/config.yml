@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Güvenlik Politikası (Security Policy)
+    url: https://github.com/MBasaran4/HesapKitap/security/policy
+    about: Lütfen güvenlik açıklarını genel issue olarak bildirmek yerine özel raporlama kanalını kullanınız.
