@@ -143,7 +143,7 @@ export default function HomePage() {
             <FiMail />
           </a>
           <a
-            href="https://www.linkedin.com"
+            href="https://www.linkedin.com/in/mücahit-başaran/"
             target="_blank"
             rel="noopener noreferrer"
             className="social-btn"
