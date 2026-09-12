@@ -1,0 +1,35 @@
+.exam-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;
+  margin: 6px auto;
+}
+
+.exam-row .custom-input-group {
+  margin: 4px 0;
+}
+
+.exam-row-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.exam-input-col {
+  flex: 1;
+}
+
+.grade-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-top: 15px;
+  margin-bottom: 5px;
+  text-align: center;
+  width: 100%;
+}

@@ -1,0 +1,117 @@
+.custom-radio-fieldset {
+  border: none;
+  padding: 0;
+  margin: 10px auto 16px auto;
+  width: 100%;
+  max-width: 380px;
+}
+
+.custom-radio-legend {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 6px;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.custom-radio-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  background-color: var(--input-hovered-color);
+  padding: 12px 16px;
+  border: 1px solid var(--border-before-color);
+  border-radius: 18px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.custom-radio-group:hover {
+  border-color: var(--button-color);
+}
+
+.custom-radio-group.column {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.custom-radio-group.row {
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.custom-radio-label {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.05rem;
+  color: var(--text-color);
+  cursor: pointer;
+  width: 100%;
+  user-select: none;
+  transition: opacity 0.2s ease;
+  position: relative;
+}
+
+.custom-radio-group.row .custom-radio-label {
+  width: auto;
+}
+
+.custom-radio-label:hover {
+  color: var(--button-color);
+}
+
+/* Visually hide input without removing it from tab/accessibility tree */
+.custom-radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.custom-radio-custom {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border-before-color);
+  border-radius: 6px;
+  margin-right: 12px;
+  display: inline-block;
+  vertical-align: middle;
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+
+.custom-radio-input:focus-visible ~ .custom-radio-custom {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-color: var(--button-color);
+}
+
+.custom-radio-label.selected .custom-radio-custom {
+  background-color: var(--button-color);
+  border-color: var(--border-after-color);
+}
+
+.custom-radio-label.selected .custom-radio-custom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--background-color);
+}
+
+.custom-radio-text {
+  line-height: 1.25;
+}

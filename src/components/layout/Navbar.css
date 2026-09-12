@@ -1,0 +1,441 @@
+/* Navbar Main Container */
+.navBar {
+    margin: 0;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    background-color: var(--navbar-bg);
+    border-bottom: 1px solid var(--border-before-color);
+    transition: background-color 0.25s ease, border-color 0.25s ease;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-color);
+    letter-spacing: -0.5px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.kitap {
+    color: var(--button-color);
+}
+
+/* Desktop Menu Styles */
+.navBar .menu {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    list-style: none;
+}
+
+.menu li {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+}
+
+.menu .title {
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.menu li:hover .title {
+    background-color: var(--button-color);
+    color: white;
+}
+
+.menu .nalt {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    min-width: 190px;
+    z-index: 110;
+}
+
+.nalt a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nalt a:hover {
+    background-color: var(--badge-bg);
+    color: var(--button-color);
+}
+
+.nalt a.active {
+    background-color: var(--badge-bg);
+    color: var(--button-color);
+    font-weight: 700;
+}
+
+.menu li:hover .nalt {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+/* Right Controls (Theme Switch & Mobile Hamburger) */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Theme Switch Component (Used in Navbar and Drawer) */
+.theme-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    direction: rtl;
+    flex-shrink: 0;
+}
+
+#theme-checkbox,
+#theme-checkbox-drawer {
+    display: none;
+}
+
+.theme-switch label {
+    font-size: 1.7rem;
+    height: 1em;
+    width: 2.3em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    background-color: #3a3a3a;
+    position: relative;
+    padding: 0 4px;
+    align-items: center;
+    box-sizing: border-box;
+    transition: background-color 0.25s ease;
+}
+
+.theme-switch input:checked + label {
+    background-color: #d1d5db;
+}
+
+.theme-switch label:active {
+    transform: scale(0.92);
+    transition: transform 0.15s;
+}
+
+.theme-switch label div {
+    width: 0.78em;
+    height: 0.78em;
+    border-radius: 50%;
+    position: absolute;
+    top: 0.11em;
+    left: 0.12em;
+    z-index: 10;
+    transition: 0.28s cubic-bezier(1, 0.33, 0.11, 1.34);
+    background-color: #242424;
+}
+
+.theme-switch input:checked + label div {
+    left: 1.4em;
+    background-color: var(--background-color);
+}
+
+.theme-switch label span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.85em;
+    height: 0.85em;
+    box-sizing: border-box;
+}
+
+.theme-switch label span:first-of-type {
+    color: #f59e0b;
+}
+
+/* Scaled sun icon matching moon icon balance */
+.theme-switch label span:first-of-type svg {
+    height: 0.72em;
+    width: 0.72em;
+    display: block;
+}
+
+.theme-switch label span:last-of-type {
+    color: #f3f4f6;
+}
+
+/* Scaled moon icon */
+.theme-switch label span:last-of-type svg {
+    height: 0.72em;
+    width: 0.72em;
+    display: block;
+}
+
+/* Hamburger Button (Mobile only) */
+.hamburger-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--text-color);
+    font-size: 28px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.hamburger-btn:hover {
+    background-color: var(--badge-bg);
+    color: var(--button-color);
+}
+
+.hamburger-btn:active {
+    transform: scale(0.92);
+}
+
+.hamburger-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* Mobile Drawer Backdrop */
+.mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.mobile-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile Drawer Container */
+.mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(320px, 85vw);
+    height: 100vh;
+    height: 100dvh;
+    background-color: var(--card-bg);
+    border-left: 1px solid var(--card-border);
+    box-shadow: -6px 0 28px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.mobile-drawer.active {
+    transform: translateX(0);
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--card-border);
+    background-color: var(--navbar-bg);
+    flex-shrink: 0;
+}
+
+.drawer-logo {
+    text-decoration: none;
+}
+
+.drawer-logo h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-color);
+    letter-spacing: -0.5px;
+}
+
+.drawer-close-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-color);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+    background-color: var(--badge-bg);
+    color: var(--button-color);
+}
+
+.drawer-close-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.drawer-content {
+    flex: 1 1 auto;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.drawer-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.drawer-section-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 2px 12px 4px 12px;
+}
+
+.drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+}
+
+.drawer-link:hover {
+    background-color: var(--badge-bg);
+    color: var(--button-color);
+    padding-left: 16px;
+}
+
+.drawer-link.active {
+    background-color: var(--badge-bg);
+    color: var(--button-color);
+    font-weight: 700;
+    border-left: 3px solid var(--button-color);
+}
+
+.home-link {
+    font-weight: 600;
+    border: 1px solid var(--card-border);
+    background-color: var(--input-hovered-color);
+    margin-bottom: 6px;
+}
+
+.drawer-link-icon {
+    font-size: 1.15rem;
+    color: var(--button-color);
+    flex-shrink: 0;
+}
+
+.drawer-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--card-border);
+    background-color: var(--navbar-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.drawer-theme-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Responsive Rules */
+@media (max-width: 768px) {
+    .navBar {
+        padding: 0 16px;
+    }
+
+    .navBar .menu {
+        display: none !important;
+    }
+
+    .desktop-theme-switch {
+        display: none !important;
+    }
+
+    .hamburger-btn {
+        display: flex;
+    }
+}
