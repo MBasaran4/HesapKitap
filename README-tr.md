@@ -1,4 +1,4 @@
-[🇬🇧 English](README-en.md) | [🇹🇷 Türkçe](README-tr.md)
+[🇬🇧 English](README.md) | [🇹🇷 Türkçe](README-tr.md)
 
 # HesapKitap
 
