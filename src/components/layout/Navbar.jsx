@@ -4,10 +4,12 @@ import { IoMenu, IoClose, IoHomeOutline } from 'react-icons/io5';
 import { FaMoon } from 'react-icons/fa6';
 import { MdOutlineWbSunny } from 'react-icons/md';
 import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../context/LanguageContext';
 import './Navbar.css';
 
 function Navbar() {
   const { isLightMode, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const hamburgerButtonRef = useRef(null);
@@ -63,7 +65,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="navBar" aria-label="Ana Gezinme">
+      <nav className="navBar" aria-label={t('navbar.mainNav')}>
         <div className="nav-left">
           <Link to="/" className="nav-logo" onClick={closeMenu}>
             <h1>
@@ -75,44 +77,72 @@ function Navbar() {
         {/* Desktop Navigation */}
         <ul className="menu">
           <li>
-            <span className="title">Sağlık</span>
+            <span className="title">{t('navbar.health')}</span>
             <div className="nalt">
-              <NavLink to="/saglik/boy-kilo-endeksi">Boy Kilo Endeksi Hesap</NavLink>
-              <NavLink to="/saglik/metabolizma-hizi">Metabolizma Hızı Hesap</NavLink>
+              <NavLink to="/saglik/boy-kilo-endeksi">{t('navbar.bmi')}</NavLink>
+              <NavLink to="/saglik/metabolizma-hizi">{t('navbar.bmr')}</NavLink>
             </div>
           </li>
           <li>
-            <span className="title">Matematik</span>
+            <span className="title">{t('navbar.mathematics')}</span>
             <div className="nalt">
-              <NavLink to="/matematik/alan-hesaplama">Alan Hesaplama</NavLink>
-              <NavLink to="/matematik/hacim-hesaplama">Hacim Hesaplama</NavLink>
+              <NavLink to="/matematik/alan-hesaplama">{t('navbar.area')}</NavLink>
+              <NavLink to="/matematik/hacim-hesaplama">{t('navbar.volume')}</NavLink>
             </div>
           </li>
           <li>
-            <span className="title">Zaman</span>
+            <span className="title">{t('navbar.time')}</span>
             <div className="nalt">
-              <NavLink to="/zaman/yas-hesaplama">Yaş Hesaplama</NavLink>
+              <NavLink to="/zaman/yas-hesaplama">{t('navbar.age')}</NavLink>
             </div>
           </li>
           <li>
-            <span className="title">Eğitim</span>
+            <span className="title">{t('navbar.education')}</span>
             <div className="nalt">
-              <NavLink to="/egitim/vize-final-hesaplama">Vize Final Hesaplama</NavLink>
+              <NavLink to="/egitim/vize-final-hesaplama">{t('navbar.grade')}</NavLink>
             </div>
           </li>
         </ul>
 
-        {/* Right side controls: Desktop theme switch & Mobile Hamburger button */}
+        {/* Right side controls: Desktop language switcher, Desktop theme switch & Mobile Hamburger button */}
         <div className="nav-right">
+          {/* Desktop Language Switcher */}
+          <div
+            className="lang-switcher desktop-lang-switcher"
+            role="group"
+            aria-label={t('accessibility.selectLanguage')}
+          >
+            <button
+              type="button"
+              className={`lang-btn ${language === 'tr' ? 'active' : ''}`}
+              onClick={() => setLanguage('tr')}
+              aria-pressed={language === 'tr'}
+            >
+              TR
+            </button>
+            <span className="lang-divider" aria-hidden="true">|</span>
+            <button
+              type="button"
+              className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+              onClick={() => setLanguage('en')}
+              aria-pressed={language === 'en'}
+            >
+              EN
+            </button>
+          </div>
+
           <div className="theme-switch desktop-theme-switch" id="theme-switch-container">
             <input
               type="checkbox"
               id="theme-checkbox"
               checked={isLightMode}
               onChange={toggleTheme}
-              aria-label="Tema Değiştir"
+              aria-label={t('accessibility.changeTheme')}
             />
-            <label htmlFor="theme-checkbox" title={isLightMode ? 'Karanlık moda geç' : 'Aydınlık moda geç'}>
+            <label
+              htmlFor="theme-checkbox"
+              title={isLightMode ? t('navbar.switchToDark') : t('navbar.switchToLight')}
+            >
               <div></div>
               <span>
                 <MdOutlineWbSunny />
@@ -128,7 +158,7 @@ function Navbar() {
             type="button"
             className="hamburger-btn"
             onClick={toggleMenu}
-            aria-label={isMenuOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+            aria-label={isMenuOpen ? t('navbar.closeMenu') : t('navbar.openMenu')}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-drawer"
           >
@@ -150,7 +180,7 @@ function Navbar() {
         className={`mobile-drawer ${isMenuOpen ? 'active' : ''}`}
         role="dialog"
         aria-modal="true"
-        aria-label="Mobil Menü"
+        aria-label={t('navbar.mobileMenu')}
       >
         <div className="drawer-header">
           <Link to="/" className="drawer-logo" onClick={closeMenu}>
@@ -163,13 +193,41 @@ function Navbar() {
             type="button"
             className="drawer-close-btn"
             onClick={closeMenu}
-            aria-label="Menüyü kapat"
+            aria-label={t('navbar.closeMenu')}
           >
             <IoClose />
           </button>
         </div>
 
         <div className="drawer-content">
+          {/* Mobile Language Switcher (inside drawer top) */}
+          <div className="drawer-lang-section">
+            <span className="drawer-lang-label">{t('accessibility.selectLanguage')}</span>
+            <div
+              className="lang-switcher drawer-lang-switcher"
+              role="group"
+              aria-label={t('accessibility.selectLanguage')}
+            >
+              <button
+                type="button"
+                className={`lang-btn ${language === 'tr' ? 'active' : ''}`}
+                onClick={() => setLanguage('tr')}
+                aria-pressed={language === 'tr'}
+              >
+                TR
+              </button>
+              <span className="lang-divider" aria-hidden="true">|</span>
+              <button
+                type="button"
+                className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+                onClick={() => setLanguage('en')}
+                aria-pressed={language === 'en'}
+              >
+                EN
+              </button>
+            </div>
+          </div>
+
           {/* Ana Sayfa */}
           <div className="drawer-section">
             <NavLink
@@ -179,76 +237,76 @@ function Navbar() {
               onClick={closeMenu}
             >
               <IoHomeOutline className="drawer-link-icon" />
-              <span>Ana Sayfa</span>
+              <span>{t('common.home')}</span>
             </NavLink>
           </div>
 
           {/* Sağlık */}
           <div className="drawer-section">
-            <div className="drawer-section-title">Sağlık</div>
+            <div className="drawer-section-title">{t('navbar.health')}</div>
             <NavLink
               to="/saglik/boy-kilo-endeksi"
               className={({ isActive }) => `drawer-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              Boy-Kilo Endeksi
+              {t('navbar.bmi')}
             </NavLink>
             <NavLink
               to="/saglik/metabolizma-hizi"
               className={({ isActive }) => `drawer-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              Metabolizma Hızı
+              {t('navbar.bmr')}
             </NavLink>
           </div>
 
           {/* Matematik */}
           <div className="drawer-section">
-            <div className="drawer-section-title">Matematik</div>
+            <div className="drawer-section-title">{t('navbar.mathematics')}</div>
             <NavLink
               to="/matematik/alan-hesaplama"
               className={({ isActive }) => `drawer-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              Alan Hesaplama
+              {t('navbar.area')}
             </NavLink>
             <NavLink
               to="/matematik/hacim-hesaplama"
               className={({ isActive }) => `drawer-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              Hacim Hesaplama
+              {t('navbar.volume')}
             </NavLink>
           </div>
 
           {/* Zaman */}
           <div className="drawer-section">
-            <div className="drawer-section-title">Zaman</div>
+            <div className="drawer-section-title">{t('navbar.time')}</div>
             <NavLink
               to="/zaman/yas-hesaplama"
               className={({ isActive }) => `drawer-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              Yaş Hesaplama
+              {t('navbar.age')}
             </NavLink>
           </div>
 
           {/* Eğitim */}
           <div className="drawer-section">
-            <div className="drawer-section-title">Eğitim</div>
+            <div className="drawer-section-title">{t('navbar.education')}</div>
             <NavLink
               to="/egitim/vize-final-hesaplama"
               className={({ isActive }) => `drawer-link ${isActive ? 'active' : ''}`}
               onClick={closeMenu}
             >
-              Vize-Final Hesaplama
+              {t('navbar.grade')}
             </NavLink>
           </div>
         </div>
 
         <div className="drawer-footer">
           <span className="drawer-theme-label">
-            {isLightMode ? 'Aydınlık Tema' : 'Karanlık Tema'}
+            {isLightMode ? t('navbar.lightTheme') : t('navbar.darkTheme')}
           </span>
           <div className="theme-switch drawer-theme-switch">
             <input
@@ -256,9 +314,12 @@ function Navbar() {
               id="theme-checkbox-drawer"
               checked={isLightMode}
               onChange={toggleTheme}
-              aria-label="Tema Değiştir (Mobil)"
+              aria-label={t('accessibility.changeThemeMobile')}
             />
-            <label htmlFor="theme-checkbox-drawer" title={isLightMode ? 'Karanlık moda geç' : 'Aydınlık moda geç'}>
+            <label
+              htmlFor="theme-checkbox-drawer"
+              title={isLightMode ? t('navbar.switchToDark') : t('navbar.switchToLight')}
+            >
               <div></div>
               <span>
                 <MdOutlineWbSunny />

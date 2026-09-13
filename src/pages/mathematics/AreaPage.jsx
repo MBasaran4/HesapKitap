@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CalculatorLayout from '../../components/calculator/CalculatorLayout';
 import RadioGroup from '../../components/common/RadioGroup';
 import InputField from '../../components/common/InputField';
 import SubmitButton from '../../components/common/SubmitButton';
 import ResultCard from '../../components/common/ResultCard';
 import { pause } from '../../utils/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function AreaPage() {
+  const { t } = useLanguage();
   const [shape, setShape] = useState('rectangle');
   const [wid, setWid] = useState('');
   const [hei, setHei] = useState('');
@@ -16,11 +18,14 @@ export default function AreaPage() {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const shapeOptions = [
-    { value: 'rectangle', label: 'Dikdörtgen veya Kare' },
-    { value: 'triangle', label: 'Üçgen' },
-    { value: 'circle', label: 'Daire' },
-  ];
+  const shapeOptions = useMemo(
+    () => [
+      { value: 'rectangle', label: t('calculators.area.shapeRectangle') },
+      { value: 'triangle', label: t('calculators.area.shapeTriangle') },
+      { value: 'circle', label: t('calculators.area.shapeCircle') },
+    ],
+    [t]
+  );
 
   const handleShapeChange = (e) => {
     setShape(e.target.value);
@@ -45,66 +50,83 @@ export default function AreaPage() {
     if (shape === 'rectangle') {
       if (!wid || isNaN(w) || w <= 0) {
         setIsError(true);
-        setResult('Lütfen geçerli bir taban genişliği (0\'dan büyük) giriniz.');
+        setResult(t('calculators.area.validation.rectWidthInvalid'));
         return;
       }
       if (!hei || isNaN(h) || h <= 0) {
         setIsError(true);
-        setResult('Lütfen geçerli bir yükseklik (0\'dan büyük) giriniz.');
+        setResult(t('calculators.area.validation.rectHeightInvalid'));
         return;
       }
       if (w > 100000 || h > 100000) {
         setIsError(true);
-        setResult('Ölçü değerleri en fazla 100.000 cm olabilir.');
+        setResult(t('calculators.area.validation.maxLimitExceeded'));
         return;
       }
 
       setLoading(true);
       await pause(250);
       const area = w * h;
-      setResult(`Alan: ${area.toFixed(2)} cm²`);
-      setDetail(`Formül: Taban (${w}) × Yükseklik (${h}) = ${area.toFixed(2)} cm²`);
+      setResult(t('calculators.area.results.score', { area: area.toFixed(2) }));
+      setDetail(
+        t('calculators.area.results.rectDetail', {
+          w,
+          h,
+          area: area.toFixed(2),
+        })
+      );
       setLoading(false);
     } else if (shape === 'triangle') {
       if (!wid || isNaN(w) || w <= 0) {
         setIsError(true);
-        setResult('Lütfen geçerli bir taban uzunluğu (0\'dan büyük) giriniz.');
+        setResult(t('calculators.area.validation.triangleBaseInvalid'));
         return;
       }
       if (!hei || isNaN(h) || h <= 0) {
         setIsError(true);
-        setResult('Lütfen geçerli bir yükseklik (0\'dan büyük) giriniz.');
+        setResult(t('calculators.area.validation.triangleHeightInvalid'));
         return;
       }
       if (w > 100000 || h > 100000) {
         setIsError(true);
-        setResult('Ölçü değerleri en fazla 100.000 cm olabilir.');
+        setResult(t('calculators.area.validation.maxLimitExceeded'));
         return;
       }
 
       setLoading(true);
       await pause(250);
       const area = (w * h) / 2;
-      setResult(`Alan: ${area.toFixed(2)} cm²`);
-      setDetail(`Formül: [Taban (${w}) × Yükseklik (${h})] / 2 = ${area.toFixed(2)} cm²`);
+      setResult(t('calculators.area.results.score', { area: area.toFixed(2) }));
+      setDetail(
+        t('calculators.area.results.triangleDetail', {
+          w,
+          h,
+          area: area.toFixed(2),
+        })
+      );
       setLoading(false);
     } else if (shape === 'circle') {
       if (!rad || isNaN(r) || r <= 0) {
         setIsError(true);
-        setResult('Lütfen geçerli bir yarıçap (0\'dan büyük) giriniz.');
+        setResult(t('calculators.area.validation.circleRadiusInvalid'));
         return;
       }
       if (r > 100000) {
         setIsError(true);
-        setResult('Yarıçap değeri en fazla 100.000 cm olabilir.');
+        setResult(t('calculators.area.validation.maxLimitExceeded'));
         return;
       }
 
       setLoading(true);
       await pause(250);
       const area = Math.PI * r * r;
-      setResult(`Alan: ${area.toFixed(2)} cm²`);
-      setDetail(`Formül: π × r² = π × (${r})² ≈ ${area.toFixed(2)} cm²`);
+      setResult(t('calculators.area.results.score', { area: area.toFixed(2) }));
+      setDetail(
+        t('calculators.area.results.circleDetail', {
+          r,
+          area: area.toFixed(2),
+        })
+      );
       setLoading(false);
     }
   };
@@ -112,23 +134,23 @@ export default function AreaPage() {
   const formulaInfo = (
     <div>
       <p>
-        <strong>Geometrik Alan Formülleri:</strong>
+        <strong>{t('calculators.area.info.title')}</strong>
         <br />
-        • <strong>Dikdörtgen / Kare:</strong> Alan = Taban × Yükseklik
+        • <strong>{t('calculators.area.shapeRectangle')}:</strong> {t('calculators.area.info.formulaRect')}
         <br />
-        • <strong>Üçgen:</strong> Alan = (Taban × Yükseklik) / 2
+        • <strong>{t('calculators.area.shapeTriangle')}:</strong> {t('calculators.area.info.formulaTriangle')}
         <br />
-        • <strong>Daire:</strong> Alan = π × r² (π ≈ 3.14159...)
+        • <strong>{t('calculators.area.shapeCircle')}:</strong> {t('calculators.area.info.formulaCircle')}
       </p>
     </div>
   );
 
   return (
     <CalculatorLayout
-      category="Matematik"
-      title="Alan Hesaplama"
-      description="Dikdörtgen, kare, üçgen ve daire gibi temel geometrik şekillerin alanını hızlı ve hassas şekilde hesaplayın."
-      infoTitle="Alan Formülleri"
+      category={t('calculators.area.category')}
+      title={t('calculators.area.title')}
+      description={t('calculators.area.description')}
+      infoTitle={t('calculators.area.infoTitle')}
       infoContent={formulaInfo}
       result={
         <ResultCard
@@ -141,7 +163,7 @@ export default function AreaPage() {
       <form className="calculator-form" onSubmit={hesapla}>
         <RadioGroup
           name="area-shape"
-          label="Geometrik Şekil Seçin"
+          label={t('calculators.area.shapeLabel')}
           options={shapeOptions}
           selectedValue={shape}
           onChange={handleShapeChange}
@@ -152,26 +174,26 @@ export default function AreaPage() {
           <>
             <InputField
               id="area-width"
-              label="Taban Uzunluğu"
-              placeholder="Örn: 10"
+              label={t('calculators.area.baseLengthLabel')}
+              placeholder={t('calculators.area.baseLengthPlaceholder')}
               type="number"
               step="any"
               min="0.01"
               value={wid}
               onChange={(e) => setWid(e.target.value)}
-              suffix="cm"
+              suffix={t('calculators.area.unitCm')}
               required
             />
             <InputField
               id="area-height"
-              label="Yükseklik"
-              placeholder="Örn: 5"
+              label={t('calculators.area.heightLabel')}
+              placeholder={t('calculators.area.heightPlaceholder')}
               type="number"
               step="any"
               min="0.01"
               value={hei}
               onChange={(e) => setHei(e.target.value)}
-              suffix="cm"
+              suffix={t('calculators.area.unitCm')}
               required
             />
           </>
@@ -180,19 +202,19 @@ export default function AreaPage() {
         {shape === 'circle' && (
           <InputField
             id="area-radius"
-            label="Daire Yarıçapı (r)"
-            placeholder="Örn: 7"
+            label={t('calculators.area.radiusLabel')}
+            placeholder={t('calculators.area.radiusPlaceholder')}
             type="number"
             step="any"
             min="0.01"
             value={rad}
             onChange={(e) => setRad(e.target.value)}
-            suffix="cm"
+            suffix={t('calculators.area.unitCm')}
             required
           />
         )}
 
-        <SubmitButton loading={loading} onClick={hesapla} text="Hesapla" />
+        <SubmitButton loading={loading} onClick={hesapla} text={t('common.calculate')} />
       </form>
     </CalculatorLayout>
   );

@@ -4,8 +4,10 @@ import InputField from '../../components/common/InputField';
 import SubmitButton from '../../components/common/SubmitButton';
 import ResultCard from '../../components/common/ResultCard';
 import { pause } from '../../utils/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function BmiPage() {
+  const { t } = useLanguage();
   const [boy, setBoy] = useState('');
   const [kilo, setKilo] = useState('');
   const [sonuc, setSonuc] = useState('');
@@ -26,25 +28,25 @@ export default function BmiPage() {
 
     if (!boy || isNaN(b)) {
       setIsError(true);
-      setSonuc('Lütfen boyunuzu giriniz.');
+      setSonuc(t('calculators.bmi.validation.heightRequired'));
       return;
     }
 
     if (b < 50 || b > 250) {
       setIsError(true);
-      setSonuc('Boy 50 cm ile 250 cm arasında olmalıdır.');
+      setSonuc(t('calculators.bmi.validation.heightRange'));
       return;
     }
 
     if (!kilo || isNaN(k)) {
       setIsError(true);
-      setSonuc('Lütfen kilonuzu giriniz.');
+      setSonuc(t('calculators.bmi.validation.weightRequired'));
       return;
     }
 
     if (k < 20 || k > 350) {
       setIsError(true);
-      setSonuc('Kilo 20 kg ile 350 kg arasında olmalıdır.');
+      setSonuc(t('calculators.bmi.validation.weightRange'));
       return;
     }
 
@@ -56,51 +58,56 @@ export default function BmiPage() {
     const minKilo = boyMetre * boyMetre * 18.5;
     const maxKilo = boyMetre * boyMetre * 24.9;
 
-    setSonuc(`Boy Kilo Endeksiniz: ${endeks.toFixed(2)} kg/m²`);
+    setSonuc(t('calculators.bmi.results.score', { score: endeks.toFixed(2) }));
 
     if (endeks < 18.5) {
-      setDurum('Kilonuz Zayıf');
+      setDurum(t('calculators.bmi.results.underweight'));
     } else if (endeks < 24.9) {
-      setDurum('Kilonuz Normal');
+      setDurum(t('calculators.bmi.results.normal'));
     } else if (endeks < 29.9) {
-      setDurum('Kilonuz Fazla (Toplu)');
+      setDurum(t('calculators.bmi.results.overweight'));
     } else if (endeks < 34.9) {
-      setDurum('1. Derece Obezite');
+      setDurum(t('calculators.bmi.results.obese1'));
     } else if (endeks < 39.9) {
-      setDurum('2. Derece Obezite');
+      setDurum(t('calculators.bmi.results.obese2'));
     } else {
-      setDurum('3. Derece Morbid Obezite');
+      setDurum(t('calculators.bmi.results.obese3'));
     }
 
-    setNormal(`Boyunuza göre ideal kilo aralığınız: ${minKilo.toFixed(1)} - ${maxKilo.toFixed(1)} kg`);
+    setNormal(
+      t('calculators.bmi.results.idealRange', {
+        min: minKilo.toFixed(1),
+        max: maxKilo.toFixed(1),
+      })
+    );
     setLoading(false);
   };
 
   const formulaInfo = (
     <div>
       <p>
-        <strong>Formül:</strong> Vücut Kitle İndeksi (VKİ) = Kilo (kg) / [Boy (m)]²
+        <strong>{t('calculators.bmi.info.formulaText')}</strong>
       </p>
       <p>
-        <strong>Dünya Sağlık Örgütü (WHO) Aralıkları:</strong>
+        <strong>{t('calculators.bmi.info.whoRanges')}</strong>
         <br />
-        • 18.5 altı: Zayıf
+        {t('calculators.bmi.info.rangeUnderweight')}
         <br />
-        • 18.5 - 24.9: Normal Kilolu
+        {t('calculators.bmi.info.rangeNormal')}
         <br />
-        • 25.0 - 29.9: Fazla Kilolu
+        {t('calculators.bmi.info.rangeOverweight')}
         <br />
-        • 30.0 ve üzeri: Obezite
+        {t('calculators.bmi.info.rangeObese')}
       </p>
     </div>
   );
 
   return (
     <CalculatorLayout
-      category="Sağlık"
-      title="Boy Kilo Endeksi Hesaplama"
-      description="Boyunuzu ve kilonuzu girerek Vücut Kitle İndeksinizi (VKİ) ve ideal kilo aralığınızı kolayca hesaplayın."
-      infoTitle="VKİ Nasıl Hesaplanır?"
+      category={t('calculators.bmi.category')}
+      title={t('calculators.bmi.title')}
+      description={t('calculators.bmi.description')}
+      infoTitle={t('calculators.bmi.infoTitle')}
       infoContent={formulaInfo}
       result={
         <ResultCard
@@ -114,33 +121,33 @@ export default function BmiPage() {
       <form className="calculator-form" onSubmit={hesapla}>
         <InputField
           id="bmi-boy"
-          label="Boyunuz"
-          placeholder="Örn: 175"
+          label={t('calculators.bmi.heightLabel')}
+          placeholder={t('calculators.bmi.heightPlaceholder')}
           type="number"
           step="0.5"
           min="50"
           max="250"
           value={boy}
           onChange={(e) => setBoy(e.target.value)}
-          suffix="cm"
+          suffix={t('calculators.bmi.unitCm')}
           required
         />
 
         <InputField
           id="bmi-kilo"
-          label="Kilonuz"
-          placeholder="Örn: 70"
+          label={t('calculators.bmi.weightLabel')}
+          placeholder={t('calculators.bmi.weightPlaceholder')}
           type="number"
           step="0.1"
           min="20"
           max="350"
           value={kilo}
           onChange={(e) => setKilo(e.target.value)}
-          suffix="kg"
+          suffix={t('calculators.bmi.unitKg')}
           required
         />
 
-        <SubmitButton loading={loading} onClick={hesapla} text="Hesapla" />
+        <SubmitButton loading={loading} onClick={hesapla} text={t('common.calculate')} />
       </form>
     </CalculatorLayout>
   );

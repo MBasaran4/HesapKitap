@@ -7,6 +7,10 @@ Bu belgedeki tüm önemli değişiklikler [Keep a Changelog](https://keepachange
 ## [Unreleased]
 
 ### Added
+- **Çoklu Dil (i18n) Desteği:** Türkçe (`tr`) ve İngilizce (`en`) tam dil desteği React Context (`LanguageContext`) ve dinamik parametre interpolasyonu ile sıfır harici paket bağımlılığıyla eklendi.
+- **Duyarlı Dil Seçici:** Masaüstü navigasyon çubuğu ve mobil çekmece menü içerisine erişilebilir `TR | EN` seçici entegre edildi; dil tercihi `localStorage` üzerinden kalıcı hale getirildi.
+- **Tam Sayfa ve Hesaplayıcı Yerelleştirmesi:** Ana sayfa, 404 sayfası, ortak bileşenler ve 6 hesaplayıcının tüm girdi, etiket, birim, doğrulama uyarısı ve dinamik formül sonuçları iki dilde eşitlendi.
+- **Dinamik Belge Niteliği:** `<html lang="...">`, sayfa başlığı ve meta açıklaması seçilen dile göre anlık olarak güncellenecek şekilde yapılandırıldı.
 - **Hesaplayıcı Konsolidasyonu:** Bağımsız 6 farklı hesaplayıcı deposu (`BoyKiloEndeks`, `MetabolizmaHesap`, `AlanHesaplama`, `HacimHesap`, `YasHesaplama`, `vizeFinalHesap`) tek bir modern React + Vite tek sayfa uygulaması (SPA) altında birleştirildi.
 - **Kategorize Edilmiş Ana Sayfa:** Hesaplayıcılar Sağlık, Matematik, Zaman ve Eğitim kategorileri altında organize edildi.
 - **Paylaşılan Bileşen Sistemi:**

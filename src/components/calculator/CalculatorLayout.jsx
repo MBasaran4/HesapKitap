@@ -1,3 +1,4 @@
+import { useLanguage } from '../../context/LanguageContext';
 import './CalculatorLayout.css';
 
 export default function CalculatorLayout({
@@ -6,9 +7,12 @@ export default function CalculatorLayout({
   description,
   children,
   result,
-  infoTitle = 'Nasıl Hesaplanır?',
+  infoTitle,
   infoContent,
 }) {
+  const { t } = useLanguage();
+  const effectiveInfoTitle = infoTitle || t('common.howToCalculate');
+
   return (
     <article className="calculator-page-wrapper">
       <header className="calculator-header-block">
@@ -26,9 +30,9 @@ export default function CalculatorLayout({
       </section>
 
       {infoContent && (
-        <aside className="calculator-info-section" aria-label="Bilgilendirme">
+        <aside className="calculator-info-section" aria-label={t('accessibility.information')}>
           <div className="calculator-info-title">
-            <span>ℹ️</span> {infoTitle}
+            <span>ℹ️</span> {effectiveInfoTitle}
           </div>
           <div className="calculator-info-content">
             {infoContent}

@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CalculatorLayout from '../../components/calculator/CalculatorLayout';
 import RadioGroup from '../../components/common/RadioGroup';
 import InputField from '../../components/common/InputField';
 import SubmitButton from '../../components/common/SubmitButton';
 import ResultCard from '../../components/common/ResultCard';
 import { pause } from '../../utils/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 import './GradePage.css';
 
 export default function GradePage() {
+  const { t } = useLanguage();
   const [calcType, setCalcType] = useState('average');
   const [numberExams, setNumberExams] = useState('1');
   const [needPoint, setNeedPoint] = useState('50');
@@ -27,16 +29,22 @@ export default function GradePage() {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const calcTypeOptions = [
-    { value: 'average', label: 'Vize Final Ortalaması' },
-    { value: 'finalPoint', label: 'Geçmek için Gereken Final Puanı' },
-  ];
+  const calcTypeOptions = useMemo(
+    () => [
+      { value: 'average', label: t('calculators.grade.typeAverage') },
+      { value: 'finalPoint', label: t('calculators.grade.typeFinalPoint') },
+    ],
+    [t]
+  );
 
-  const examCountOptions = [
-    { value: '1', label: '1 Vize' },
-    { value: '2', label: '2 Vize' },
-    { value: '3', label: '3 Vize' },
-  ];
+  const examCountOptions = useMemo(
+    () => [
+      { value: '1', label: t('calculators.grade.examCount1') },
+      { value: '2', label: t('calculators.grade.examCount2') },
+      { value: '3', label: t('calculators.grade.examCount3') },
+    ],
+    [t]
+  );
 
   const handleCalcTypeChange = (e) => {
     setCalcType(e.target.value);
@@ -102,12 +110,12 @@ export default function GradePage() {
 
       if (v.score === '' || isNaN(s) || s < 0 || s > 100) {
         setIsError(true);
-        setResult(`Lütfen ${i + 1}. Vize için 0 ile 100 arasında bir not giriniz.`);
+        setResult(t('calculators.grade.validation.vizeScoreInvalid', { idx: i + 1 }));
         return;
       }
       if (v.rate === '' || isNaN(r) || r <= 0 || r > 100) {
         setIsError(true);
-        setResult(`Lütfen ${i + 1}. Vize için geçerli bir yüzde oranı (1 - 100) giriniz.`);
+        setResult(t('calculators.grade.validation.vizeRateInvalid', { idx: i + 1 }));
         return;
       }
     }
@@ -120,18 +128,22 @@ export default function GradePage() {
 
       if (finalScore === '' || isNaN(fScore) || fScore < 0 || fScore > 100) {
         setIsError(true);
-        setResult('Lütfen Final için 0 ile 100 arasında bir not giriniz.');
+        setResult(t('calculators.grade.validation.finalScoreInvalid'));
         return;
       }
       if (finalRate === '' || isNaN(fRate) || fRate <= 0 || fRate > 100) {
         setIsError(true);
-        setResult('Lütfen Final için geçerli bir yüzde oranı giriniz.');
+        setResult(t('calculators.grade.validation.finalRateInvalid'));
         return;
       }
 
       if (Math.round(totalVizeRate + fRate) !== 100) {
         setIsError(true);
-        setResult(`Sınav oranları toplamı %100 olmalıdır. (Şu anki toplam: %${totalVizeRate + fRate})`);
+        setResult(
+          t('calculators.grade.validation.rateSumMustBe100', {
+            sum: totalVizeRate + fRate,
+          })
+        );
         return;
       }
 
@@ -142,26 +154,31 @@ export default function GradePage() {
       const finalContribution = (fScore * fRate) / 100;
       const totalAverage = vizeContribution + finalContribution;
 
-      setResult(`Dönem Sonu Not Ortalaması: ${totalAverage.toFixed(2)}`);
+      setResult(t('calculators.grade.results.averageScore', { avg: totalAverage.toFixed(2) }));
       if (totalAverage >= 50) {
-        setStatus('Durum: Başarılı (Dersi Geçtiniz 🎉)');
+        setStatus(t('calculators.grade.results.statusPassed'));
       } else {
-        setStatus('Durum: Başarısız (Geçme Notunun Altında Kaldınız)');
+        setStatus(t('calculators.grade.results.statusFailed'));
       }
-      setDetail(`Vize Katkısı: ${vizeContribution.toFixed(2)} puan | Final Katkısı: ${finalContribution.toFixed(2)} puan`);
+      setDetail(
+        t('calculators.grade.results.averageDetail', {
+          vize: vizeContribution.toFixed(2),
+          final: finalContribution.toFixed(2),
+        })
+      );
       setLoading(false);
     } else {
       const targetPoint = parseFloat(needPoint);
       if (needPoint === '' || isNaN(targetPoint) || targetPoint <= 0 || targetPoint > 100) {
         setIsError(true);
-        setResult('Lütfen 1 ile 100 arasında bir ders geçme baraj notu giriniz.');
+        setResult(t('calculators.grade.validation.thresholdInvalid'));
         return;
       }
 
       const remainingRate = 100 - totalVizeRate;
       if (remainingRate <= 0) {
         setIsError(true);
-        setResult(`Vize oranları toplamı (%${totalVizeRate}) %100 veya daha fazla olamaz. Final için oran kalmalıdır.`);
+        setResult(t('calculators.grade.validation.vizeRateOverflow', { sum: totalVizeRate }));
         return;
       }
 
@@ -172,17 +189,33 @@ export default function GradePage() {
       const neededFinal = ((targetPoint - vizeContribution) * 100) / remainingRate;
 
       if (neededFinal <= 0) {
-        setResult('Final sınavından 0 alsanız bile dersi geçiyorsunuz!');
-        setStatus('Tebrikler, vize notlarınız tek başına geçme barajını aşıyor.');
-        setDetail(`Mevcut Vize Puanı: ${vizeContribution.toFixed(2)} | Hedef Baraj: ${targetPoint}`);
+        setResult(t('calculators.grade.results.passWithZero'));
+        setStatus(t('calculators.grade.results.passWithZeroStatus'));
+        setDetail(
+          t('calculators.grade.results.passWithZeroDetail', {
+            vize: vizeContribution.toFixed(2),
+            target: targetPoint,
+          })
+        );
       } else if (neededFinal > 100) {
-        setResult(`Gereken Final Notu: ${neededFinal.toFixed(1)}`);
-        setStatus('Uyarı: 100 üzerinden geçmek matematiksel olarak mümkün görünmüyor.');
-        setDetail(`Final etki oranı (%${remainingRate}) ile hedeflenen ${targetPoint} ortalamaya ulaşılamıyor.`);
+        setResult(t('calculators.grade.results.impossibleTitle', { needed: neededFinal.toFixed(1) }));
+        setStatus(t('calculators.grade.results.impossibleStatus'));
+        setDetail(
+          t('calculators.grade.results.impossibleDetail', {
+            rate: remainingRate,
+            target: targetPoint,
+          })
+        );
       } else {
-        setResult(`Geçmek için Gereken Minimum Final Notu: ${neededFinal.toFixed(1)}`);
-        setStatus(`Final sınavından en az ${Math.ceil(neededFinal)} almalısınız.`);
-        setDetail(`Mevcut Vize Puanı: ${vizeContribution.toFixed(2)} | Hedef: ${targetPoint} | Final Etki Oranı: %${remainingRate}`);
+        setResult(t('calculators.grade.results.neededTitle', { needed: neededFinal.toFixed(1) }));
+        setStatus(t('calculators.grade.results.neededStatus', { ceil: Math.ceil(neededFinal) }));
+        setDetail(
+          t('calculators.grade.results.neededDetail', {
+            vize: vizeContribution.toFixed(2),
+            target: targetPoint,
+            rate: remainingRate,
+          })
+        );
       }
 
       setLoading(false);
@@ -194,21 +227,21 @@ export default function GradePage() {
   const formulaInfo = (
     <div>
       <p>
-        <strong>Not Ağırlıklı Ortalama Formülü:</strong>
+        <strong>{t('calculators.grade.info.title')}</strong>
         <br />
-        • Ortalama = (1. Vize × %Oran) + (2. Vize × %Oran) + ... + (Final × %Oran)
+        {t('calculators.grade.info.formulaAvg')}
         <br />
-        • Geçmek için Gereken Final Notu = [Hedef Not - (Vize Toplam Puanı)] / (Final Oranı)
+        {t('calculators.grade.info.formulaFinal')}
       </p>
     </div>
   );
 
   return (
     <CalculatorLayout
-      category="Eğitim"
-      title="Vize Final Not Hesaplama"
-      description="Üniversite ve lise dersleriniz için vize ve final sınavı ortalamanızı hesaplayın veya dersi geçmek için finalden kaç almanız gerektiğini öğrenin."
-      infoTitle="Not Hesaplama Mantığı"
+      category={t('calculators.grade.category')}
+      title={t('calculators.grade.title')}
+      description={t('calculators.grade.description')}
+      infoTitle={t('calculators.grade.infoTitle')}
       infoContent={formulaInfo}
       result={
         <ResultCard
@@ -222,7 +255,7 @@ export default function GradePage() {
       <form className="calculator-form" onSubmit={hesapla}>
         <RadioGroup
           name="calcType"
-          label="Hesaplama Türü"
+          label={t('calculators.grade.calcTypeLabel')}
           options={calcTypeOptions}
           selectedValue={calcType}
           onChange={handleCalcTypeChange}
@@ -231,7 +264,7 @@ export default function GradePage() {
 
         <RadioGroup
           name="numberExams"
-          label="Vize Sınavı Sayısı"
+          label={t('calculators.grade.examCountLabel')}
           options={examCountOptions}
           selectedValue={numberExams}
           onChange={handleExamCountChange}
@@ -241,27 +274,29 @@ export default function GradePage() {
         {calcType === 'finalPoint' && (
           <InputField
             id="target-need-point"
-            label="Ders Geçme Baraj Notu"
-            placeholder="Örn: 50 veya 60"
+            label={t('calculators.grade.thresholdLabel')}
+            placeholder={t('calculators.grade.thresholdPlaceholder')}
             type="number"
             step="1"
             min="10"
             max="100"
             value={needPoint}
             onChange={(e) => setNeedPoint(e.target.value)}
-            suffix="puan"
+            suffix={t('calculators.grade.unitPoints')}
             required
           />
         )}
 
-        <div className="grade-section-title">Vize Notları ve Yüzdelik Oranları</div>
+        <div className="grade-section-title">{t('calculators.grade.vizeSectionTitle')}</div>
         {Array.from({ length: count }).map((_, idx) => (
           <div key={idx} className="exam-row">
-            <span className="exam-row-label">{idx + 1}. Vize:</span>
+            <span className="exam-row-label">
+              {t('calculators.grade.vizeLabel', { idx: idx + 1 })}
+            </span>
             <div className="exam-input-col">
               <InputField
                 id={`vize-${idx}-score`}
-                placeholder="Not (0-100)"
+                placeholder={t('calculators.grade.scorePlaceholder')}
                 type="number"
                 step="any"
                 min="0"
@@ -274,14 +309,14 @@ export default function GradePage() {
             <div className="exam-input-col">
               <InputField
                 id={`vize-${idx}-rate`}
-                placeholder="Oran %"
+                placeholder={t('calculators.grade.ratePlaceholder')}
                 type="number"
                 step="any"
                 min="1"
                 max="100"
                 value={vizes[idx].rate}
                 onChange={(e) => handleVizeChange(idx, 'rate', e.target.value)}
-                suffix="%"
+                suffix={t('calculators.grade.unitPercent')}
                 required
               />
             </div>
@@ -290,13 +325,13 @@ export default function GradePage() {
 
         {calcType === 'average' && (
           <>
-            <div className="grade-section-title">Final Notu ve Oranı</div>
+            <div className="grade-section-title">{t('calculators.grade.finalSectionTitle')}</div>
             <div className="exam-row">
-              <span className="exam-row-label">Final:</span>
+              <span className="exam-row-label">{t('calculators.grade.finalLabel')}</span>
               <div className="exam-input-col">
                 <InputField
                   id="final-score"
-                  placeholder="Not (0-100)"
+                  placeholder={t('calculators.grade.scorePlaceholder')}
                   type="number"
                   step="any"
                   min="0"
@@ -309,14 +344,14 @@ export default function GradePage() {
               <div className="exam-input-col">
                 <InputField
                   id="final-rate"
-                  placeholder="Oran %"
+                  placeholder={t('calculators.grade.ratePlaceholder')}
                   type="number"
                   step="any"
                   min="1"
                   max="100"
                   value={finalRate}
                   onChange={(e) => setFinalRate(e.target.value)}
-                  suffix="%"
+                  suffix={t('calculators.grade.unitPercent')}
                   required
                 />
               </div>
@@ -324,7 +359,7 @@ export default function GradePage() {
           </>
         )}
 
-        <SubmitButton loading={loading} onClick={hesapla} text="Hesapla" />
+        <SubmitButton loading={loading} onClick={hesapla} text={t('common.calculate')} />
       </form>
     </CalculatorLayout>
   );
