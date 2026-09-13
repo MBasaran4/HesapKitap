@@ -421,6 +421,71 @@
     color: var(--text-color);
 }
 
+/* Language Switcher Styles */
+.lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--input-hovered-color);
+    border: 1px solid var(--border-before-color);
+    border-radius: 20px;
+    padding: 2px 4px;
+    gap: 2px;
+}
+
+.lang-btn {
+    background: none;
+    border: none;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    border-radius: 14px;
+    cursor: pointer;
+    line-height: 1;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.lang-btn:hover {
+    color: var(--text-color);
+}
+
+.lang-btn.active {
+    background-color: var(--button-color);
+    color: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 169, 127, 0.35);
+}
+
+.lang-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.lang-divider {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.4;
+    user-select: none;
+    padding: 0 1px;
+}
+
+/* Drawer Language Section */
+.drawer-lang-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    margin: 4px 12px 14px 12px;
+    background-color: var(--input-hovered-color);
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+}
+
+.drawer-lang-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
 /* Responsive Rules */
 @media (max-width: 768px) {
     .navBar {
@@ -428,6 +493,10 @@
     }
 
     .navBar .menu {
+        display: none !important;
+    }
+
+    .desktop-lang-switcher {
         display: none !important;
     }
 

@@ -1,93 +1,99 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGithub, FaLinkedin, FaHeartPulse, FaCalculator, FaClock, FaGraduationCap } from 'react-icons/fa6';
 import { FiMail } from 'react-icons/fi';
+import { useLanguage } from '../context/LanguageContext';
 import './HomePage.css';
 
-const CATEGORIES = [
-  {
-    id: 'health',
-    title: 'Sağlık Hesaplayıcıları',
-    icon: <FaHeartPulse />,
-    calculators: [
-      {
-        path: '/saglik/boy-kilo-endeksi',
-        title: 'Boy Kilo Endeksi (VKİ)',
-        desc: 'Vücut kitle indeksinizi, sağlık sınıfınızı ve ideal kilo aralığınızı anında öğrenin.',
-        icon: '⚖️',
-      },
-      {
-        path: '/saglik/metabolizma-hizi',
-        title: 'Metabolizma Hızı (BMR)',
-        desc: 'Harris-Benedict formülü ile günlük bazal kalori ihtiyacınızı ve aktivite çarpanlarını hesaplayın.',
-        icon: '🔥',
-      },
-    ],
-  },
-  {
-    id: 'mathematics',
-    title: 'Matematik Hesaplayıcıları',
-    icon: <FaCalculator />,
-    calculators: [
-      {
-        path: '/matematik/alan-hesaplama',
-        title: 'Alan Hesaplama',
-        desc: 'Dikdörtgen, kare, üçgen ve daire alanlarını pratik ve yüksek hassasiyetle hesaplayın.',
-        icon: '📐',
-      },
-      {
-        path: '/matematik/hacim-hesaplama',
-        title: 'Hacim Hesaplama',
-        desc: 'Küp, prizma, küre, silindir, koni ve kare piramit hacimlerini 3 boyutlu formüllerle hesaplayın.',
-        icon: '🧊',
-      },
-    ],
-  },
-  {
-    id: 'time',
-    title: 'Zaman Hesaplayıcıları',
-    icon: <FaClock />,
-    calculators: [
-      {
-        path: '/zaman/yas-hesaplama',
-        title: 'Yaş ve Gün Hesaplama',
-        desc: 'Tam yaşınızı (yıl, ay, gün), yaşadığınız toplam gün sayısını ve doğum gününüze kalan süreyi öğrenin.',
-        icon: '⏳',
-      },
-    ],
-  },
-  {
-    id: 'education',
-    title: 'Eğitim Hesaplayıcıları',
-    icon: <FaGraduationCap />,
-    calculators: [
-      {
-        path: '/egitim/vize-final-hesaplama',
-        title: 'Vize Final Not Hesaplama',
-        desc: 'Üniversite ve lise dersleriniz için dönem sonu ortalamasını veya geçmek için gereken final notunu hesaplayın.',
-        icon: '🎓',
-      },
-    ],
-  },
-];
-
 export default function HomePage() {
+  const { t } = useLanguage();
+
+  const categories = useMemo(
+    () => [
+      {
+        id: 'health',
+        title: t('home.categories.healthTitle'),
+        icon: <FaHeartPulse />,
+        calculators: [
+          {
+            path: '/saglik/boy-kilo-endeksi',
+            title: t('home.cards.bmiTitle'),
+            desc: t('home.cards.bmiDesc'),
+            icon: '⚖️',
+          },
+          {
+            path: '/saglik/metabolizma-hizi',
+            title: t('home.cards.bmrTitle'),
+            desc: t('home.cards.bmrDesc'),
+            icon: '🔥',
+          },
+        ],
+      },
+      {
+        id: 'mathematics',
+        title: t('home.categories.mathTitle'),
+        icon: <FaCalculator />,
+        calculators: [
+          {
+            path: '/matematik/alan-hesaplama',
+            title: t('home.cards.areaTitle'),
+            desc: t('home.cards.areaDesc'),
+            icon: '📐',
+          },
+          {
+            path: '/matematik/hacim-hesaplama',
+            title: t('home.cards.volumeTitle'),
+            desc: t('home.cards.volumeDesc'),
+            icon: '🧊',
+          },
+        ],
+      },
+      {
+        id: 'time',
+        title: t('home.categories.timeTitle'),
+        icon: <FaClock />,
+        calculators: [
+          {
+            path: '/zaman/yas-hesaplama',
+            title: t('home.cards.ageTitle'),
+            desc: t('home.cards.ageDesc'),
+            icon: '⏳',
+          },
+        ],
+      },
+      {
+        id: 'education',
+        title: t('home.categories.eduTitle'),
+        icon: <FaGraduationCap />,
+        calculators: [
+          {
+            path: '/egitim/vize-final-hesaplama',
+            title: t('home.cards.gradeTitle'),
+            desc: t('home.cards.gradeDesc'),
+            icon: '🎓',
+          },
+        ],
+      },
+    ],
+    [t]
+  );
+
   return (
     <div className="home-container">
       {/* Hero Section */}
       <section className="home-hero">
-        <span className="home-badge">Çok Amaçlı Hesaplama Portalı</span>
+        <span className="home-badge">{t('home.badge')}</span>
         <h1 className="home-hero-title">
           Hesap<span className="highlight">Kitap</span>
         </h1>
         <p className="home-hero-desc">
-          Sağlık, matematik, zaman ve eğitim kategorilerinde karmaşık hesaplamaları sizin için
-          basit, hızlı ve anlaşılır hale getiren profesyonel araçlar koleksiyonu.
+          {t('home.desc')}
         </p>
       </section>
 
       {/* Categorized Calculator Cards */}
       <div className="home-categories">
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <section key={cat.id} className="category-block" aria-labelledby={`cat-${cat.id}`}>
             <div className="category-header">
               <span className="category-icon">{cat.icon}</span>
@@ -107,7 +113,7 @@ export default function HomePage() {
                   </div>
                   <p className="calc-card-desc">{calc.desc}</p>
                   <div className="calc-card-action">
-                    <span>Hesapla</span>
+                    <span>{t('home.cards.action')}</span>
                     <span>→</span>
                   </div>
                 </Link>
@@ -118,10 +124,10 @@ export default function HomePage() {
       </div>
 
       {/* Contact & Feedback Section */}
-      <section className="home-footer-connect" aria-label="İletişim ve Geri Bildirim">
+      <section className="home-footer-connect" aria-label={t('home.contact.title')}>
         <div className="home-footer-text">
-          <h3>İletişim & Geri Bildirim</h3>
-          <p>Yeni hesaplayıcı önerilerinizi ve görüşlerinizi bize iletebilirsiniz.</p>
+          <h3>{t('home.contact.title')}</h3>
+          <p>{t('home.contact.desc')}</p>
         </div>
         <div className="home-social-links">
           <a
@@ -129,16 +135,16 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="social-btn"
-            aria-label="GitHub Repository"
-            title="GitHub"
+            aria-label={t('home.contact.githubAria')}
+            title={t('home.contact.githubTitle')}
           >
             <FaGithub />
           </a>
           <a
             href="mailto:basaranmucahit785@gmail.com"
             className="social-btn"
-            aria-label="E-posta"
-            title="E-posta ile İletişime Geçin"
+            aria-label={t('home.contact.emailAria')}
+            title={t('home.contact.emailTitle')}
           >
             <FiMail />
           </a>
@@ -147,8 +153,8 @@ export default function HomePage() {
             target="_blank"
             rel="noopener noreferrer"
             className="social-btn"
-            aria-label="LinkedIn"
-            title="LinkedIn"
+            aria-label={t('home.contact.linkedinAria')}
+            title={t('home.contact.linkedinTitle')}
           >
             <FaLinkedin />
           </a>

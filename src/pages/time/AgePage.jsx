@@ -4,14 +4,16 @@ import RadioGroup from '../../components/common/RadioGroup';
 import SubmitButton from '../../components/common/SubmitButton';
 import ResultCard from '../../components/common/ResultCard';
 import { pause } from '../../utils/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 import './AgePage.css';
 
-const MONTH_NAMES = [
+const DEFAULT_MONTH_NAMES = [
   'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
   'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
 ];
 
 export default function AgePage() {
+  const { language, t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const [calcDateMode, setCalcDateMode] = useState('today');
@@ -29,14 +31,29 @@ export default function AgePage() {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const modeOptions = [
-    { value: 'today', label: 'Bugün için hesapla' },
-    { value: 'future', label: 'İleri bir tarih için hesapla' },
-  ];
+  const monthNames = useMemo(() => {
+    const list = t('calculators.age.months');
+    return Array.isArray(list) ? list : DEFAULT_MONTH_NAMES;
+  }, [t]);
+
+  const modeOptions = useMemo(
+    () => [
+      { value: 'today', label: t('calculators.age.modeToday') },
+      { value: 'future', label: t('calculators.age.modeFuture') },
+    ],
+    [t]
+  );
 
   const days = useMemo(() => Array.from({ length: 31 }, (_, i) => String(i + 1)), []);
-  const months = useMemo(() => Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1} - ${MONTH_NAMES[i]}` })), []);
-  
+  const months = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, i) => ({
+        value: String(i + 1),
+        label: `${i + 1} - ${monthNames[i] || DEFAULT_MONTH_NAMES[i]}`,
+      })),
+    [monthNames]
+  );
+
   const birthYears = useMemo(() => {
     const list = [];
     for (let y = currentYear; y >= 1900; y -= 1) {
@@ -81,7 +98,7 @@ export default function AgePage() {
       birthDate.getDate() !== bDay
     ) {
       setIsError(true);
-      setResult('Lütfen geçerli bir takvim günü seçiniz (seçilen ayda bu gün bulunmuyor).');
+      setResult(t('calculators.age.validation.invalidBirthDate'));
       return;
     }
 
@@ -100,14 +117,14 @@ export default function AgePage() {
         compareDate.getDate() !== tDay
       ) {
         setIsError(true);
-        setResult('Lütfen geçerli bir hedef takvim günü seçiniz.');
+        setResult(t('calculators.age.validation.invalidTargetDate'));
         return;
       }
     }
 
     if (compareDate <= birthDate) {
       setIsError(true);
-      setResult('Hesaplanacak tarih, doğum tarihinden sonraki bir gün olmalıdır.');
+      setResult(t('calculators.age.validation.targetBeforeBirth'));
       return;
     }
 
@@ -133,12 +150,23 @@ export default function AgePage() {
     // Gerçek gün farkı (Milisaniye bazında artık yıllar dahil)
     const diffMs = compareDate.getTime() - birthDate.getTime();
     const totalDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const localeCode = language === 'en' ? 'en-US' : 'tr-TR';
 
-    const formattedCompare = `${compareDate.getDate()} ${MONTH_NAMES[compareDate.getMonth()]} ${compareDate.getFullYear()}`;
-    setResult(`${formattedCompare} tarihindeki yaşınız:`);
-    setStatus(`${years} Yıl, ${monthsDiff} Ay, ${daysDiff} Gün`);
+    const currentMonthName = monthNames[compareDate.getMonth()] || DEFAULT_MONTH_NAMES[compareDate.getMonth()];
+    const formattedCompare = `${compareDate.getDate()} ${currentMonthName} ${compareDate.getFullYear()}`;
 
-    let detailStr = `Toplam yaşanılan gün: ${totalDays.toLocaleString('tr-TR')} gün`;
+    setResult(t('calculators.age.results.header', { date: formattedCompare }));
+    setStatus(
+      t('calculators.age.results.ageBreakdown', {
+        years,
+        months: monthsDiff,
+        days: daysDiff,
+      })
+    );
+
+    let detailStr = t('calculators.age.results.totalDays', {
+      days: totalDays.toLocaleString(localeCode),
+    });
 
     if (calcDateMode === 'today') {
       const today = new Date();
@@ -147,7 +175,7 @@ export default function AgePage() {
         nextBirthday = new Date(today.getFullYear() + 1, bMonth - 1, bDay);
       }
       const daysToNext = Math.ceil((nextBirthday.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-      detailStr += ` | Sonraki doğum gününüze ${daysToNext} gün kaldı`;
+      detailStr += t('calculators.age.results.daysUntilBirthday', { days: daysToNext });
     }
 
     setDetail(detailStr);
@@ -157,21 +185,21 @@ export default function AgePage() {
   const formulaInfo = (
     <div>
       <p>
-        <strong>Yaş ve Gün Nasıl Hesaplanır?</strong>
+        <strong>{t('calculators.age.info.title')}</strong>
         <br />
-        • Yaşınız, doğum tarihiniz ile hedef tarih arasındaki artık yıllar (366 gün) ve ayların gerçek gün sayıları (28, 29, 30, 31) dikkate alınarak tam takvim farkı olarak hesaplanır.
+        {t('calculators.age.info.desc1')}
         <br />
-        • Toplam gün sayısı milisaniye hassasiyetiyle tam geçen 24 saatlik periyotları gösterir.
+        {t('calculators.age.info.desc2')}
       </p>
     </div>
   );
 
   return (
     <CalculatorLayout
-      category="Zaman"
-      title="Yaş Hesaplama"
-      description="Doğum tarihinizi girerek tam yaşınızı, yaşadığınız toplam gün sayısını ve bir sonraki doğum gününüze kalan süreyi öğrenin."
-      infoTitle="Yaş Hesaplama Detayları"
+      category={t('calculators.age.category')}
+      title={t('calculators.age.title')}
+      description={t('calculators.age.description')}
+      infoTitle={t('calculators.age.infoTitle')}
       infoContent={formulaInfo}
       result={
         <ResultCard
@@ -185,17 +213,19 @@ export default function AgePage() {
       <form className="calculator-form" onSubmit={hesapla}>
         <RadioGroup
           name="calcDateMode"
-          label="Hesaplama Modu"
+          label={t('calculators.age.modeLabel')}
           options={modeOptions}
           selectedValue={calcDateMode}
           onChange={handleModeChange}
           direction="column"
         />
 
-        <div className="date-section-title">Doğum Tarihiniz</div>
+        <div className="date-section-title">{t('calculators.age.birthDateTitle')}</div>
         <div className="date-picker-row">
           <div className="date-select-wrapper">
-            <label className="date-select-label" htmlFor="birth-day">Gün</label>
+            <label className="date-select-label" htmlFor="birth-day">
+              {t('calculators.age.dayLabel')}
+            </label>
             <select
               id="birth-day"
               className="date-select-field"
@@ -203,13 +233,17 @@ export default function AgePage() {
               onChange={(e) => setBirthDay(e.target.value)}
             >
               {days.map((d) => (
-                <option key={d} value={d}>{d}</option>
+                <option key={d} value={d}>
+                  {d}
+                </option>
               ))}
             </select>
           </div>
 
           <div className="date-select-wrapper">
-            <label className="date-select-label" htmlFor="birth-month">Ay</label>
+            <label className="date-select-label" htmlFor="birth-month">
+              {t('calculators.age.monthLabel')}
+            </label>
             <select
               id="birth-month"
               className="date-select-field"
@@ -217,13 +251,17 @@ export default function AgePage() {
               onChange={(e) => setBirthMonth(e.target.value)}
             >
               {months.map((m) => (
-                <option key={m.value} value={m.value}>{m.label}</option>
+                <option key={m.value} value={m.value}>
+                  {m.label}
+                </option>
               ))}
             </select>
           </div>
 
           <div className="date-select-wrapper">
-            <label className="date-select-label" htmlFor="birth-year">Yıl</label>
+            <label className="date-select-label" htmlFor="birth-year">
+              {t('calculators.age.yearLabel')}
+            </label>
             <select
               id="birth-year"
               className="date-select-field"
@@ -231,7 +269,9 @@ export default function AgePage() {
               onChange={(e) => setBirthYear(e.target.value)}
             >
               {birthYears.map((y) => (
-                <option key={y} value={y}>{y}</option>
+                <option key={y} value={y}>
+                  {y}
+                </option>
               ))}
             </select>
           </div>
@@ -239,10 +279,12 @@ export default function AgePage() {
 
         {calcDateMode === 'future' && (
           <>
-            <div className="date-section-title">Hesaplanacak Hedef Tarih</div>
+            <div className="date-section-title">{t('calculators.age.targetDateTitle')}</div>
             <div className="date-picker-row">
               <div className="date-select-wrapper">
-                <label className="date-select-label" htmlFor="target-day">Gün</label>
+                <label className="date-select-label" htmlFor="target-day">
+                  {t('calculators.age.dayLabel')}
+                </label>
                 <select
                   id="target-day"
                   className="date-select-field"
@@ -250,13 +292,17 @@ export default function AgePage() {
                   onChange={(e) => setTargetDay(e.target.value)}
                 >
                   {days.map((d) => (
-                    <option key={d} value={d}>{d}</option>
+                    <option key={d} value={d}>
+                      {d}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="date-select-wrapper">
-                <label className="date-select-label" htmlFor="target-month">Ay</label>
+                <label className="date-select-label" htmlFor="target-month">
+                  {t('calculators.age.monthLabel')}
+                </label>
                 <select
                   id="target-month"
                   className="date-select-field"
@@ -264,13 +310,17 @@ export default function AgePage() {
                   onChange={(e) => setTargetMonth(e.target.value)}
                 >
                   {months.map((m) => (
-                    <option key={m.value} value={m.value}>{m.label}</option>
+                    <option key={m.value} value={m.value}>
+                      {m.label}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="date-select-wrapper">
-                <label className="date-select-label" htmlFor="target-year">Yıl</label>
+                <label className="date-select-label" htmlFor="target-year">
+                  {t('calculators.age.yearLabel')}
+                </label>
                 <select
                   id="target-year"
                   className="date-select-field"
@@ -278,7 +328,9 @@ export default function AgePage() {
                   onChange={(e) => setTargetYear(e.target.value)}
                 >
                   {targetYears.map((y) => (
-                    <option key={y} value={y}>{y}</option>
+                    <option key={y} value={y}>
+                      {y}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -286,7 +338,7 @@ export default function AgePage() {
           </>
         )}
 
-        <SubmitButton loading={loading} onClick={hesapla} text="Hesapla" />
+        <SubmitButton loading={loading} onClick={hesapla} text={t('common.calculate')} />
       </form>
     </CalculatorLayout>
   );

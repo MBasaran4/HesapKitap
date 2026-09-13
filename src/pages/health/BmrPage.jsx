@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CalculatorLayout from '../../components/calculator/CalculatorLayout';
 import RadioGroup from '../../components/common/RadioGroup';
 import InputField from '../../components/common/InputField';
 import SubmitButton from '../../components/common/SubmitButton';
 import ResultCard from '../../components/common/ResultCard';
 import { pause } from '../../utils/helpers';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function BmrPage() {
+  const { language, t } = useLanguage();
   const [gender, setGender] = useState('male');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
@@ -16,10 +18,13 @@ export default function BmrPage() {
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const genderOptions = [
-    { value: 'male', label: 'Erkek' },
-    { value: 'female', label: 'Kadın' },
-  ];
+  const genderOptions = useMemo(
+    () => [
+      { value: 'male', label: t('calculators.bmr.genderMale') },
+      { value: 'female', label: t('calculators.bmr.genderFemale') },
+    ],
+    [t]
+  );
 
   const hesapla = async (e) => {
     e?.preventDefault();
@@ -33,43 +38,43 @@ export default function BmrPage() {
 
     if (!gender) {
       setIsError(true);
-      setResult('Lütfen cinsiyet seçiniz.');
+      setResult(t('calculators.bmr.validation.genderRequired'));
       return;
     }
 
     if (!age || isNaN(a)) {
       setIsError(true);
-      setResult('Lütfen yaşınızı giriniz.');
+      setResult(t('calculators.bmr.validation.ageRequired'));
       return;
     }
 
     if (a < 1 || a > 120) {
       setIsError(true);
-      setResult('Yaş 1 ile 120 arasında olmalıdır.');
+      setResult(t('calculators.bmr.validation.ageRange'));
       return;
     }
 
     if (!height || isNaN(h)) {
       setIsError(true);
-      setResult('Lütfen boyunuzu giriniz.');
+      setResult(t('calculators.bmr.validation.heightRequired'));
       return;
     }
 
     if (h < 50 || h > 260) {
       setIsError(true);
-      setResult('Boy 50 cm ile 260 cm arasında olmalıdır.');
+      setResult(t('calculators.bmr.validation.heightRange'));
       return;
     }
 
     if (!weight || isNaN(w)) {
       setIsError(true);
-      setResult('Lütfen kilonuzu giriniz.');
+      setResult(t('calculators.bmr.validation.weightRequired'));
       return;
     }
 
     if (w < 20 || w > 350) {
       setIsError(true);
-      setResult('Kilo 20 kg ile 350 kg arasında olmalıdır.');
+      setResult(t('calculators.bmr.validation.weightRange'));
       return;
     }
 
@@ -86,10 +91,17 @@ export default function BmrPage() {
     }
 
     const bmrRounded = Math.round(bmr);
-    setResult(`Bazal Metabolizma Hızınız: ${bmrRounded.toLocaleString('tr-TR')} kcal/gün`);
+    const localeCode = language === 'en' ? 'en-US' : 'tr-TR';
+    const bmrFormatted = bmrRounded.toLocaleString(localeCode);
+    const sedentaryFormatted = Math.round(bmrRounded * 1.2).toLocaleString(localeCode);
+    const moderateFormatted = Math.round(bmrRounded * 1.55).toLocaleString(localeCode);
+
+    setResult(t('calculators.bmr.results.score', { bmr: bmrFormatted }));
     setDetail(
-      `Hareketsiz yaşam için tahmini günlük kalori: ${Math.round(bmrRounded * 1.2).toLocaleString('tr-TR')} kcal | ` +
-      `Orta aktif yaşam için: ${Math.round(bmrRounded * 1.55).toLocaleString('tr-TR')} kcal`
+      t('calculators.bmr.results.detail', {
+        sedentary: sedentaryFormatted,
+        moderate: moderateFormatted,
+      })
     );
     setLoading(false);
   };
@@ -97,32 +109,32 @@ export default function BmrPage() {
   const formulaInfo = (
     <div>
       <p>
-        <strong>Harris-Benedict Denklemi:</strong>
+        <strong>{t('calculators.bmr.info.formulaTitle')}</strong>
         <br />
-        • Erkek: BMR = 66.47 + (13.75 × Kilo) + (5 × Boy) - (6.76 × Yaş)
+        {t('calculators.bmr.info.formulaMale')}
         <br />
-        • Kadın: BMR = 655.1 + (9.563 × Kilo) + (1.85 × Boy) - (4.68 × Yaş)
+        {t('calculators.bmr.info.formulaFemale')}
       </p>
       <p>
-        <strong>Aktivite Çarpanları:</strong>
+        <strong>{t('calculators.bmr.info.activityTitle')}</strong>
         <br />
-        • Masa başı / Hareketsiz: BMR × 1.2
+        {t('calculators.bmr.info.actSedentary')}
         <br />
-        • Hafif Egzersiz (haftada 1-3 gün): BMR × 1.375
+        {t('calculators.bmr.info.actLight')}
         <br />
-        • Orta Düzey Egzersiz (haftada 3-5 gün): BMR × 1.55
+        {t('calculators.bmr.info.actModerate')}
         <br />
-        • Ağır Spor / Yoğun Antrenman: BMR × 1.725
+        {t('calculators.bmr.info.actHeavy')}
       </p>
     </div>
   );
 
   return (
     <CalculatorLayout
-      category="Sağlık"
-      title="Metabolizma Hızı Hesaplama"
-      description="Harris-Benedict formülü ile vücudunuzun dinlenme halindeyken harcadığı günlük minimum kalori ihtiyacını (BMR) hesaplayın."
-      infoTitle="BMR ve Kalori İhtiyacı Nedir?"
+      category={t('calculators.bmr.category')}
+      title={t('calculators.bmr.title')}
+      description={t('calculators.bmr.description')}
+      infoTitle={t('calculators.bmr.infoTitle')}
       infoContent={formulaInfo}
       result={
         <ResultCard
@@ -135,7 +147,7 @@ export default function BmrPage() {
       <form className="calculator-form" onSubmit={hesapla}>
         <RadioGroup
           name="bmr-gender"
-          label="Cinsiyetiniz"
+          label={t('calculators.bmr.genderLabel')}
           options={genderOptions}
           selectedValue={gender}
           onChange={(e) => setGender(e.target.value)}
@@ -144,47 +156,47 @@ export default function BmrPage() {
 
         <InputField
           id="bmr-age"
-          label="Yaşınız"
-          placeholder="Örn: 25"
+          label={t('calculators.bmr.ageLabel')}
+          placeholder={t('calculators.bmr.agePlaceholder')}
           type="number"
           step="1"
           min="1"
           max="120"
           value={age}
           onChange={(e) => setAge(e.target.value)}
-          suffix="yaş"
+          suffix={t('calculators.bmr.unitAge')}
           required
         />
 
         <InputField
           id="bmr-height"
-          label="Boyunuz"
-          placeholder="Örn: 178"
+          label={t('calculators.bmr.heightLabel')}
+          placeholder={t('calculators.bmr.heightPlaceholder')}
           type="number"
           step="0.5"
           min="50"
           max="260"
           value={height}
           onChange={(e) => setHeight(e.target.value)}
-          suffix="cm"
+          suffix={t('calculators.bmr.unitCm')}
           required
         />
 
         <InputField
           id="bmr-weight"
-          label="Kilonuz"
-          placeholder="Örn: 75"
+          label={t('calculators.bmr.weightLabel')}
+          placeholder={t('calculators.bmr.weightPlaceholder')}
           type="number"
           step="0.1"
           min="20"
           max="350"
           value={weight}
           onChange={(e) => setWeight(e.target.value)}
-          suffix="kg"
+          suffix={t('calculators.bmr.unitKg')}
           required
         />
 
-        <SubmitButton loading={loading} onClick={hesapla} text="Hesapla" />
+        <SubmitButton loading={loading} onClick={hesapla} text={t('common.calculate')} />
       </form>
     </CalculatorLayout>
   );

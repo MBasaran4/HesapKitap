@@ -8,7 +8,11 @@ All notable changes to this project are documented in this file in accordance wi
 
 ### Added
 
-* **Calculator Consolidation:** Merged six independent calculator repositories (`BoyKiloEndeks`, `MetabolizmaHesap`, `AlanHesaplama`, `HacimHesap`, `YasHesaplama`, `vizeFinalHesap`) into a single modern React + Vite Single Page Application (SPA).
+* **Multilingual (i18n) Support:** Full language support for Turkish (`tr`) and English (`en`) was added with zero external package dependencies using React Context (`LanguageContext`) and dynamic parameter interpolation.
+* **Responsive Language Selector:** An accessible `TR | EN` selector was integrated into the desktop navigation bar and mobile drawer menu; language preferences are persisted through `localStorage`.
+* **Full Page and Calculator Localization:** The homepage, 404 page, shared components, and all 6 calculators were fully synchronized in both languages, including all inputs, labels, units, validation warnings, and dynamic formula results.
+* **Dynamic Document Metadata:** `<html lang="...">`, page title, and meta description are configured to update instantly according to the selected language.
+* **Calculator Consolidation:** Six independent calculator repositories (`BoyKiloEndeks`, `MetabolizmaHesap`, `AlanHesaplama`, `HacimHesap`, `YasHesaplama`, `vizeFinalHesap`) were merged into a single modern React + Vite Single Page Application (SPA).
 * **Categorized Homepage:** Organized calculators into four categories: Health, Mathematics, Time, and Education.
 * **Shared Component System:**
 
