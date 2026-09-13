@@ -1,37 +1,43 @@
-# Değişiklik Günlüğü (Changelog)
+# Changelog
 
-Bu belgedeki tüm önemli değişiklikler [Keep a Changelog](https://keepachangelog.com/tr/1.0.0/) ilkelerine ve [Semantic Versioning](https://semver.org/lang/tr/) standartlarına uygun olarak belgelenmektedir.
+All notable changes to this project are documented in this file in accordance with the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) principles and [Semantic Versioning](https://semver.org/) standards.
 
 ---
 
-## [Unreleased]
+## [0.1.0] - 2026-09-13
 
 ### Added
-- **Hesaplayıcı Konsolidasyonu:** Bağımsız 6 farklı hesaplayıcı deposu (`BoyKiloEndeks`, `MetabolizmaHesap`, `AlanHesaplama`, `HacimHesap`, `YasHesaplama`, `vizeFinalHesap`) tek bir modern React + Vite tek sayfa uygulaması (SPA) altında birleştirildi.
-- **Kategorize Edilmiş Ana Sayfa:** Hesaplayıcılar Sağlık, Matematik, Zaman ve Eğitim kategorileri altında organize edildi.
-- **Paylaşılan Bileşen Sistemi:**
-  - `CalculatorLayout`: Tüm hesaplayıcılar için standartlaştırılmış kart, başlık ve bilgi kutusu şablonu.
-  - `InputField`: Birim desteği, dinamik hata mesajları ve erişilebilir etiket-girdi eşleştirmesi.
-  - `RadioGroup`: Semantik fieldset/legend ve modern buton-radyo seçim grubu.
-  - `ResultCard`: `aria-live="polite"` ekran okuyucu uyumlu anlık sonuç kartı.
-  - `SubmitButton`: Tutarlı hesaplama ve sıfırlama aksiyon butonu.
-- **Duyarlı Gezinme (Navbar):** Masaüstü yatay menü ve mobil cihazlar için sağdan açılan hamburger çekmece (drawer) menüsü.
-- **Tema Sistemi (Dark / Light):** CSS değişkenleri ve `localStorage` kalıcılığı ile anlık tema geçişi.
-- **Kapsamlı Girdi Doğrulama:**
-  - Sınır dışı, boş veya negatif değerlerin engellenmesi.
-  - Takvim kontrolleri (30 çeken aylarda 31. gün, artık yıl dışı 29 Şubat ve gelecek tarihlerin engellenmesi).
-  - Arayüzde `NaN` veya `Infinity` oluşmasını önleyen korumalar.
-- **Açık Kaynak Dokümantasyonu & Şablonlar:**
-  - `README.md`, `LICENSE` (MIT), `CONTRIBUTING.md`, `SECURITY.md`.
-  - GitHub Issue şablonları (`bug_report.md`, `feature_request.md`, `config.yml`).
-  - GitHub Pull Request şablonu (`pull_request_template.md`).
-  - GitHub Actions CI iş akışı (`ci.yml`: `npm ci`, `npm run lint`, `npm run build`).
+
+* **Calculator Consolidation:** Merged six independent calculator repositories (`BoyKiloEndeks`, `MetabolizmaHesap`, `AlanHesaplama`, `HacimHesap`, `YasHesaplama`, `vizeFinalHesap`) into a single modern React + Vite Single Page Application (SPA).
+* **Categorized Homepage:** Organized calculators into four categories: Health, Mathematics, Time, and Education.
+* **Shared Component System:**
+
+  * `CalculatorLayout`: Standardized card, heading, and information box layout for all calculators.
+  * `InputField`: Unit support, dynamic error messages, and accessible label-input associations.
+  * `RadioGroup`: Semantic `fieldset`/`legend` structure with a modern radio selection interface.
+  * `ResultCard`: Real-time result card with `aria-live="polite"` support for screen readers.
+  * `SubmitButton`: Consistent calculation and reset action button.
+* **Responsive Navigation:** Desktop horizontal navigation and a right-side hamburger drawer for mobile devices.
+* **Theme System (Dark / Light):** Instant theme switching using CSS variables with persistent preferences stored in `localStorage`.
+* **Comprehensive Input Validation:**
+
+  * Prevents out-of-range, empty, and negative values.
+  * Calendar validation for invalid dates, including the 31st day of months with only 30 days, February 29th outside leap years, and future dates.
+  * Protection against displaying `NaN` or `Infinity` in the user interface.
+* **Open Source Documentation & Templates:**
+
+  * `README.md`, `LICENSE` (MIT), `CONTRIBUTING.md`, and `SECURITY.md`.
+  * GitHub Issue templates (`bug_report.md`, `feature_request.md`, `config.yml`).
+  * GitHub Pull Request template (`pull_request_template.md`).
+  * GitHub Actions CI workflow (`ci.yml`) running `npm ci`, `npm run lint`, and `npm run build`.
 
 ### Changed
-- Proje bağımlılıkları temizlendi; gereksiz Next.js kaldırıldı, `@vercel/speed-insights/react` ve `react-router-dom` entegre edildi.
-- Hacim hesaplamasında kare piramit formülü doğrulandı ($\frac{a^2 \times h}{3}$) ve sonuç etiketi düzeltildi.
-- Yaş hesaplama sayfasında 50KB'lık statik takvim dizi kodları kaldırılarak dinamik ve hassas tarih farkı algoritmasına geçildi.
+
+* Cleaned up project dependencies by removing the unnecessary Next.js dependency and integrating `@vercel/speed-insights/react` and `react-router-dom`.
+* Verified the square pyramid volume formula (`a² × h / 3`) and corrected the result label.
+* Replaced approximately 50 KB of static calendar array data on the age calculation page with a dynamic and precise date difference algorithm.
 
 ### Removed
-- Dağınık ve mükerrer CSS dosyaları temizlendi; merkezi `index.css` tasarım token'ları ile yeniden yapılandırıldı.
-- Kullanılmayan bileşenler ve eski şablon dosyaları kaldırıldı.
+
+* Removed scattered and duplicated CSS files and restructured styling around centralized `index.css` design tokens.
+* Removed unused components and legacy template files.
